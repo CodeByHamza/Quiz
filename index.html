@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMIT QUIZ MAKING</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+        h1,
+        h2,
+        p {
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="studentDetails" style="display: block;">
+        <h1>Student Details Form:</h1>
+        <form id="studentForm">
+            <label for="rollNumber">Roll Number:</label>
+            <input type="text" id="rollNumber" name="rollNumber" required><br>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="batch">Batch:</label>
+            <input type="text" id="batch" name="batch" required><br>
+
+            <label for="section">Section:</label>
+            <input type="text" id="section" name="section" required><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="quiz" style="display: none;">
+        <h1>Quiz Page:</h1>
+        <form id="quizForm">
+            <label for="topic">Topic:</label>
+            <input type="text" id="topic" name="topic" required><br>
+
+            <h2>Questions:</h2>
+
+            <div class="question">
+                <p>1. What is the capital of France?</p>
+                <input type="radio" name="q1" value="Paris" required> Paris<br>
+                <input type="radio" name="q1" value="London"> London<br>
+                <input type="radio" name="q1" value="Berlin"> Berlin<br>
+                <input type="radio" name="q1" value="Madrid"> Madrid<br>
+            </div>
+
+            <!-- Add four more questions here -->
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="results" style="display: none;">
+        <h1>Results Page:</h1>
+        <h2>Student Details:</h2>
+        <p id="studentDetailsResult"></p>
+
+        <h2>Quiz Topic:</h2>
+        <p id="quizTopicResult"></p>
+
+        <h2>Quiz Score:</h2>
+        <p id="quizScoreResult"></p>
+    </div>
+
+    <script>
+        document.getElementById("studentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var studentData = {};
+
+            for (var pair of formData.entries()) {
+                studentData[pair[0]] = pair[1];
+            }
+
+            sessionStorage.setItem("studentData", JSON.stringify(studentData));
+
+            alert("Student details stored successfully!");
+            document.getElementById("studentDetails").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+        });
+
+        document.getElementById("quizForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var score = 0;
+            var correctAnswers = ["Paris", /* Add correct answers for other questions */ ];
+
+            for (var pair of formData.entries()) {
+                if (correctAnswers.includes(pair[1])) {
+                    score++;
+                }
+            }
+
+            sessionStorage.setItem("quizScore", score);
+
+            alert("Quiz evaluated successfully!");
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("results").style.display = "block";
+        });
+
+        window.onload = function() {
+            var studentData = JSON.parse(sessionStorage.getItem("studentData"));
+            var quizScore = sessionStorage.getItem("quizScore");
+
+            if (studentData) {
+                document.getElementById("studentDetailsResult").innerText =
+                    "Roll Number: " + studentData.rollNumber + "\n" +
+                    "Name: " + studentData.name + "\n" +
+                    "Batch: " + studentData.batch + "\n" +
+                    "Section: " + studentData.section;
+            }
+
+            var quizTopic = document.getElementById("topic").value;
+            document.getElementById("quizTopicResult").innerText = "Quiz Topic: " + quizTopic;
+
+            if (quizScore) {
+                document.getElementById("quizScoreResult").innerText = "Quiz Score: " + quizScore;
+            }
+        };
+    </script>
+</body>
+
+</html>
